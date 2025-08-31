@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Donation Finder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: crimson;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    form input, form select, form button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background: rgb(45, 80, 149);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: darkred;
+    }
+    .search-box {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #696767;
+      width: 100%;
+      border-radius: 5px;
+    }
+    .donor-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .donor-card {
+      background: rgb(10, 9, 9);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .donor-card h3 {
+      margin: 0;
+      color: crimson;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🩸 Blood Donation Finder</h1>
+    <p>Register as a donor & help save lives!</p>
+  </header>
+
+  <div class="container">
+    <!-- Registration Form -->
+    <form id="donorForm">
+      <h2>Register as a Donor</h2>
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="text" id="city" placeholder="City" required>
+      <select id="bloodGroup" required>
+        <option value="">Select Blood Group</option>
+        <option>A+</option>
+        <option>A-</option>
+        <option>B+</option>
+        <option>B-</option>
+        <option>O+</option>
+        <option>O-</option>
+        <option>AB+</option>
+        <option>AB-</option>
+      </select>
+      <input type="text" id="contact" placeholder="Contact Number / Email" required>
+      <button type="submit">Register</button>
+    </form>
+
+    <!-- Search Box -->
+    <input type="text" id="searchBox" class="search-box" placeholder="Search by blood group or city...">
+
+    <!-- Donor List -->
+    <div id="donorList" class="donor-list">
+      <!-- Donor cards will appear here -->
+    </div>
+  </div>
+
+  <script>
+    const donorForm = document.getElementById("donorForm");
+    const donorList = document.getElementById("donorList");
+    const searchBox = document.getElementById("searchBox");
+
+    let donors = [];
+
+    // Add new donor
+    donorForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const donor = {
+        name: document.getElementById("name").value,
+        city: document.getElementById("city").value.toLowerCase(),
+        bloodGroup: document.getElementById("bloodGroup").value.toUpperCase(),
+        contact: document.getElementById("contact").value
+      };
+      donors.push(donor);
+      displayDonors(donors);
+      donorForm.reset();
+    });
+
+    // Display donor list
+    function displayDonors(donorArray) {
+      donorList.innerHTML = "";
+      donorArray.forEach(donor => {
+        const card = document.createElement("div");
+        card.classList.add("donor-card");
+        card.innerHTML = `
+          <h3>${donor.name}</h3>
+          <p><strong>City:</strong> ${donor.city}</p>
+          <p><strong>Blood Group:</strong> ${donor.bloodGroup}</p>
+          <p><strong>Contact:</strong> ${donor.contact}</p>
+        `;
+        donorList.appendChild(card);
+      });
+    }
+
+    // Search donors
+    searchBox.addEventListener("keyup", function() {
+      const query = searchBox.value.toLowerCase();
+      const filteredDonors = donors.filter(donor => 
+        donor.city.includes(query) || donor.bloodGroup.toLowerCase().includes(query)
+      );
+      displayDonors(filteredDonors);
+    });
+  </script>
+</body>
+</html>
